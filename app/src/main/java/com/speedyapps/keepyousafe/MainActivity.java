@@ -16,8 +16,6 @@ public class MainActivity extends AppCompatActivity {
         intent = new Intent(MainActivity.this,alarmService.class);
         choice=0;
     }
-    //AJDSGAJSGDHGSADASGJDA
-
     public void onClick(View view){
         Log.i("zz",""+choice);
         switch(choice) {
