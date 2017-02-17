@@ -5,7 +5,9 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS">
-    <uses-permission android:name="android.permission.READ_SMS" /></uses-permission>
+        <uses-permission android:name="android.permission.READ_SMS" />
+    </uses-permission>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -24,16 +26,19 @@
             android:name=".alarmService"
             android:enabled="true"
             android:exported="true" />
-        <receiver android:name="com.speedyapps.keepyousafe.SMSReader$readSMS">
+
+        <receiver android:name=".SMSReader$readSMS">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
+
         <service
             android:name=".SMSReader"
             android:enabled="true"
-            android:exported="true">
-        </service>
+            android:exported="true"></service>
+
+        <activity android:name=".ContactSelection"></activity>
     </application>
 
 </manifest>
