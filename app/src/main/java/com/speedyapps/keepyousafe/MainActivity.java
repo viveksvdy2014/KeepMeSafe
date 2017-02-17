@@ -33,14 +33,27 @@ public class MainActivity extends AppCompatActivity {
     public void onClick(View view){
         Log.i("zz",""+choice);
         switch(choice) {
-            case 0:  startService(intent);
+            case 0:
+                startService(intent);
                 count = shared.getInt("count", 0);
+                Log.d("COUNT", String.valueOf(count));
                 for (int i = 1; i <= count; i++)
                 {
                     n1 = sp.getString("value" + i, "");
                     n = sharedpreferences.getString(n1, "");
-                sendSMS(n,"Help Me!!!!");
-                }
+                    Log.d("sub",n);
+                    try
+                    {
+                        if(!(n.isEmpty()))
+                        {
+                            sendSMS(n, "Help Me!!!!");
+                        }
+                    }
+                    catch (Exception e){}
+                    }
+
+
+
                 break;
             case 1: stopService(intent);
                 break;
