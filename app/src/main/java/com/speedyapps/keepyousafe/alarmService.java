@@ -23,14 +23,14 @@ public class alarmService extends Service {
 
         super.onCreate();
         mediaPlayer = MediaPlayer.create(this,R.raw.danger);
-        forceFullVolume();
+       // forceFullVolume();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         mediaPlayer.start();
 
-        forceFullVolume();
+      //  forceFullVolume();
         return super.onStartCommand(intent, flags, startId);
     }
 
