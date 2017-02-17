@@ -35,18 +35,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <TextView
-        android:text="If this was a FALSEALARM OR ACCIDENT, please ENTER THE PIN AND press CANCEL!"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/textView3"
-        android:textSize="24sp"
-        android:textAlignment="center"
-        android:textStyle="normal|bold"
-        android:textColor="@android:color/holo_green_light" />
-
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -72,4 +60,17 @@
         android:layout_alignParentStart="true"
         style="@android:style/Widget.Holo.Button"
         android:onClick="onCancel" />
+
+    <TextView
+        android:text="If this is a FALSEALARM OR ACCIDENT, please ENTER THE PIN AND press CANCEL!"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3"
+        android:textSize="24sp"
+        android:textAlignment="center"
+        android:textStyle="normal|bold"
+        android:textColor="@android:color/holo_green_light"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>
