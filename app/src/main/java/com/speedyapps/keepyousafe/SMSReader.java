@@ -53,8 +53,8 @@ public class SMSReader extends Service {
                         Log.d("SmsReceiver", "senderNum: "+ senderNum + "; message: " + message);
                         int count=0;
                         Handler handler = new Handler();
-                        myContext.startService(alarm);
                         if(message.equals("Help Me!!!!")){
+                            myContext.startService(alarm);
                             handler.postDelayed(new Runnable() {
                                 public void run() {
                                     myContext.stopService(alarm);
@@ -65,9 +65,6 @@ public class SMSReader extends Service {
 
                         // Show alert
                         int duration = Toast.LENGTH_LONG;
-                        Toast toast = Toast.makeText(context, "senderNum "+ senderNum + ", message: " + message, duration);
-                        toast.show();
-
                     } // end for loop
                 } // bundle is null
 
