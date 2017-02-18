@@ -24,14 +24,15 @@ public class confirmationScreen extends AppCompatActivity {
     public static String file1 = "MyPREFERENCES";
     public static String file2 = "PREFERENCES";
     public static String file3 = "COUNT";
-    Handler handler;
+    Handler handler,handler2;
     Intent alarmIntent ;
-    Runnable run;
+    Runnable run,run2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirmation_screen);
         handler=new Handler();
+        handler2 = new Handler();
         alarmIntent = new Intent(confirmationScreen.this,alarmService.class);
         textView= (TextView)findViewById(R.id.countDown);
         editText=(EditText)findViewById(R.id.editTextPIN);
@@ -51,7 +52,27 @@ public class confirmationScreen extends AppCompatActivity {
                 handler.postDelayed(this,1000);
             }
         };
+        run2=new Runnable() {
+            @Override
+            public void run() {
+                if((!editText.getText().toString().equals("2020"))&&textView.getText().toString().equals("0")) {
+                    distressCall();
+                }
+                else if(editText.getText().toString().equals("2020")){
+                    handler.removeCallbacks(run);
+                    handler2.removeCallbacks(this);
+                    Toast.makeText(confirmationScreen.this, "Distress Calls Cancelled!", Toast.LENGTH_SHORT).show();
+                    Intent main = new Intent(confirmationScreen.this,MainActivity.class);
+                    stopService(alarmIntent);
+                    startActivity(main);
+                }
+                else if ((!editText.getText().toString().equals("2020")))
+                    handler2.post(this);
+            }
+        };
+        handler2.post(run2);
         handler.post(run);
+
     }
 
     public void onCancel(View view){
