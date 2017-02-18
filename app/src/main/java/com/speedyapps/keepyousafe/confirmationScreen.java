@@ -49,44 +49,36 @@ public class confirmationScreen extends AppCompatActivity {
                     handler.removeCallbacks(this);
                 }
                 else
-                handler.postDelayed(this,1000);
+                    handler.postDelayed(this,1000);
             }
         };
+
         run2=new Runnable() {
             @Override
             public void run() {
-                if((!editText.getText().toString().equals("2020"))&&textView.getText().toString().equals("0")) {
-                    distressCall();
-                }
-                else if(editText.getText().toString().equals("2020")){
+                if(editText.getText().toString().equals("2020")){
+                    stopService(alarmIntent);
                     handler.removeCallbacks(run);
                     handler2.removeCallbacks(this);
                     Toast.makeText(confirmationScreen.this, "Distress Calls Cancelled!", Toast.LENGTH_SHORT).show();
                     Intent main = new Intent(confirmationScreen.this,MainActivity.class);
-                    stopService(alarmIntent);
                     startActivity(main);
                 }
-                else if ((!editText.getText().toString().equals("2020")))
-                    handler2.post(this);
+                else if(textView.getText().toString().equals("0")) {
+                    distressCall();
+                    handler2.postDelayed(this,100);
+                }
+                else
+                    handler2.postDelayed(this,100);
+
+
             }
         };
-        handler2.post(run2);
         handler.post(run);
+        handler2.post(run2);
 
     }
 
-    public void onCancel(View view){
-        if((!editText.getText().toString().equals("2020"))&&textView.getText().toString().equals("0"))
-            distressCall();
-        else if(editText.getText().toString().equals("2020")){
-            handler.removeCallbacks(run);
-            Toast.makeText(this, "Cancelled Distress Signals!", Toast.LENGTH_SHORT).show();
-            Intent main = new Intent(confirmationScreen.this,MainActivity.class);
-            stopService(alarmIntent);
-            startActivity(main);
-        }
-
-    }
     public void distressCall(){
         startService(alarmIntent);
         count = shared.getInt("count", 0);
