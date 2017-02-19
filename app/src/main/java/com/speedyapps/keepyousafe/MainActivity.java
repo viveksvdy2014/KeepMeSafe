@@ -58,26 +58,18 @@ public class MainActivity extends AppCompatActivity {
         ImageButton help = (ImageButton)findViewById(R.id.helpButton);
         help.setOnLongClickListener(new View.OnLongClickListener(){
             public boolean onLongClick(View v){
-                onClick();
+                backCount=0;
+                startActivity(intent);
+                finish();
                 return true;
             }
 
         });
 
     }
-    public void onClick(){
-            backCount=0;
-            Log.i("zz",""+choice);
-            switch(choice) {
-                case 0:
-                    startActivity(intent);
-                    break;
-                case 1: stopService(intent);
-                    break;
-            }
 
-            choice=(choice+1)%2;
-        }
+
+
 
     public void contact(View v)
     {

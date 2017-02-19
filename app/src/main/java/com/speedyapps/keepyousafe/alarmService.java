@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Handler;
 import android.os.IBinder;
 import android.provider.MediaStore;
 import android.widget.MediaController;
@@ -24,6 +25,15 @@ public class alarmService extends Service {
         super.onCreate();
         mediaPlayer = MediaPlayer.create(this,R.raw.danger);
         forceFullVolume();
+        final Handler handler = new Handler();
+        Runnable run = new Runnable() {
+            @Override
+            public void run() {
+                forceFullVolume();
+                handler.postDelayed(this,1000);
+            }
+        };
+        handler.post(run);
     }
 
     @Override

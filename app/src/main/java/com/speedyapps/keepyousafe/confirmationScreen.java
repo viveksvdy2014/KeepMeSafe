@@ -63,6 +63,7 @@ public class confirmationScreen extends AppCompatActivity {
                     Toast.makeText(confirmationScreen.this, "Distress Calls Cancelled!", Toast.LENGTH_SHORT).show();
                     Intent main = new Intent(confirmationScreen.this,MainActivity.class);
                     startActivity(main);
+                    finish();
                 }
                 else
                     handler2.postDelayed(this,100);
@@ -98,6 +99,10 @@ public class confirmationScreen extends AppCompatActivity {
     {
         SmsManager sms = SmsManager.getDefault();
         sms.sendTextMessage(phoneNumber, null, message, null, null);
+    }
 
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(this, "Please Enter the PIN CODE in order to Go Back!!!", Toast.LENGTH_SHORT).show();
     }
 }
