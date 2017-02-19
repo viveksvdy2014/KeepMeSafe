@@ -64,10 +64,6 @@ public class confirmationScreen extends AppCompatActivity {
                     Intent main = new Intent(confirmationScreen.this,MainActivity.class);
                     startActivity(main);
                 }
-                else if(textView.getText().toString().equals("0")) {
-                    distressCall();
-                    handler2.postDelayed(this,100);
-                }
                 else
                     handler2.postDelayed(this,100);
 
