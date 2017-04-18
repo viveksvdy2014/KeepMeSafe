@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Build;
 import android.support.annotation.MainThread;
 import android.support.annotation.RequiresApi;
@@ -17,6 +18,7 @@ import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -25,6 +27,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     Intent intent;
     int choice;
+    private TextView textView;
+    private GpsTool gpsTool;
     SharedPreferences firsttime;
     private static final int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 291;
     int backCount=0;
@@ -65,6 +69,17 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+
+        textView = (TextView) this.findViewById(R.id.loc);
+        if (gpsTool == null) {
+            gpsTool = new GpsTool(this) {
+                @Override
+                public void onGpsLocationChanged(Location location) {
+                    super.onGpsLocationChanged(location);
+                    refreshLocation(location);
+                }
+            };
+        }
 
     }
 
@@ -137,5 +152,27 @@ public class MainActivity extends AppCompatActivity {
                 .setNegativeButton("Cancel", null)
                 .create()
                 .show();
+    }
+    private void refreshLocation(Location location) {
+        Double longitude = location.getLongitude();
+        Double latitude = location.getLatitude();
+        Double altitude = location.getAltitude();
+        StringBuilder sb = new StringBuilder();
+        sb.append("Longitude:").append(longitude).append("\n");
+        sb.append("Latitude:").append(latitude).append("\n");
+        sb.append("Altitude:").append(altitude);
+        textView.setText(sb.toString());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        gpsTool.stopGpsUpdate();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        gpsTool.startGpsUpdate();
     }
 }
