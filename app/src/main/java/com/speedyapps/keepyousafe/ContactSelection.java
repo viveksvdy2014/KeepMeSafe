@@ -176,54 +176,51 @@ public class ContactSelection extends Activity {
 
     public void delete(View v)
     {
-        int pos = l.getCheckedItemPosition();
-        if (pos > -1)
-        {
-            try {
-                String b,b1 = null,b2;
-                b = a.get(pos).toString();
+        try {
+            int pos = l.getCheckedItemPosition();
+            if (pos > -1) {
+                try {
+                    String b, b1 = null, b2;
+                    b = a.get(pos).toString();
 
-                String s11 = b.split("\\(")[0];
-                Log.d("del", s11);
+                    String s11 = b.split("\\(")[0];
+                    Log.d("del", s11);
 
 
-                Iterator iter = sp.getAll().entrySet().iterator();
+                    Iterator iter = sp.getAll().entrySet().iterator();
 
-                {
-                    while (iter.hasNext()) {
-                        Map.Entry pair = (Map.Entry) iter.next();
-                        if (s11.equals(pair.getValue())) {
-                            b1 = pair.getKey().toString();
-                            Log.d("b1", b1);
+                    {
+                        while (iter.hasNext()) {
+                            Map.Entry pair = (Map.Entry) iter.next();
+                            if (s11.equals(pair.getValue())) {
+                                b1 = pair.getKey().toString();
+                                Log.d("b1", b1);
+                            }
                         }
+                        // Check the value here
+
+                        a.remove(pos);
+
+                        arr.notifyDataSetChanged();
+
+                        sp.edit().remove(b1).commit();
+                        sharedpreferences.edit().remove(s11).commit();
+
+
+                        Toast.makeText(this, "Deleted Successfully", Toast.LENGTH_SHORT).show();
                     }
-                    // Check the value here
-
-                    a.remove(pos);
-
-                    arr.notifyDataSetChanged();
-
-                    sp.edit().remove(b1).commit();
-                    sharedpreferences.edit().remove(s11).commit();
-
-
-
-
-
-                    Toast.makeText(this, "Deleted Successfully", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
                 }
-            } catch (Exception e) {
+
+
+            } else {
+                Toast.makeText(this, "Not Deleted", Toast.LENGTH_SHORT).show();
             }
-
-
+            arr.notifyDataSetChanged();
+        }
+        catch (Exception e){
 
         }
-        else
-        {
-            Toast.makeText(this, "Not Deleted", Toast.LENGTH_SHORT).show();
-        }
-        arr.notifyDataSetChanged();
-
     }
 
 }

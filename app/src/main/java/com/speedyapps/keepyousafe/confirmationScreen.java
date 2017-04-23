@@ -28,13 +28,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+
 import org.w3c.dom.Text;
 
 import java.util.List;
 
 public class confirmationScreen extends AppCompatActivity implements LocationListener {
 
-    public static int SMS_SEND_INTERVAL=2000;
+    public static int SMS_SEND_INTERVAL=2*60*1000;
     LocationManager locationManager;
     TextView textView;
     EditText editText;
@@ -55,6 +57,12 @@ public class confirmationScreen extends AppCompatActivity implements LocationLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirmation_screen);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        boolean enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if (!enabled) {
+            Toast.makeText(this, "Please Enable GPS to use KeepMeSafe", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+        }
         provider = locationManager.getProvider(LocationManager.GPS_PROVIDER);
         Toast.makeText(this, "Provider"+provider, Toast.LENGTH_SHORT).show();
         handler = new Handler();
@@ -79,7 +87,7 @@ public class confirmationScreen extends AppCompatActivity implements LocationLis
                     i--;
                     if(i<=0)
                         i=0;
-                    handler.postDelayed(this, 100);
+                    handler.postDelayed(this, 1000);
                 }
             }
         };
@@ -97,7 +105,7 @@ public class confirmationScreen extends AppCompatActivity implements LocationLis
                     startActivity(main);
                     finish();
                 } else
-                    handler2.postDelayed(this, 100);
+                    handler2.postDelayed(this, 1000);
 
 
             }
@@ -129,7 +137,7 @@ public class confirmationScreen extends AppCompatActivity implements LocationLis
             }
         }
         }
-
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,2000,1,this);
         run3 = new Runnable() {
             @Override
             public void run() {
@@ -291,4 +299,9 @@ public class confirmationScreen extends AppCompatActivity implements LocationLis
         }
         return bestLocation;
     }
+
+    public void requestLocationChange(){
+
+    }
+
 }

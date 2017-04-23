@@ -26,6 +26,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
         sp=getSharedPreferences("locationinfo",MODE_PRIVATE);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -79,5 +80,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,longitude),18));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,longitude),18));
          }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent main = new Intent(MapsActivity.this,MainActivity.class);
+        startActivity(main);
     }
 }

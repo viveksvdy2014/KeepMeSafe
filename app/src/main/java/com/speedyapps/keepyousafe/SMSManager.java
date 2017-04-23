@@ -54,13 +54,12 @@ public class SMSManager extends BroadcastReceiver {
                 sp.edit().putString("latitude",latitudepart).putString("longitude",longitudepart).commit();
                 Log.i("lat","lat"+latitudepart);
                 Intent mapsIntent = new Intent(context, MapsActivity.class);
-                //mapsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mapsIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                mapsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                //mapsIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 //                if(!sp.getString("status","null").equals("running")) {
-                    context.startActivity(mapsIntent);
+//                    context.startActivity(mapsIntent);
 //                }
 //                if(sp.getString("status","null").equals("paused")){
-//                    context.stopService(mapsIntent);
                     context.startActivity(mapsIntent);
                 }
             }
