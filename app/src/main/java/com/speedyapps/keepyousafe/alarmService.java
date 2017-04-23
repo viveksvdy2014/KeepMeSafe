@@ -39,7 +39,6 @@ public class alarmService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         mediaPlayer.start();
-
         forceFullVolume();
         return super.onStartCommand(intent, flags, startId);
     }

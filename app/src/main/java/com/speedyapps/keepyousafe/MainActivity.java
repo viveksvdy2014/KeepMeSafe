@@ -27,8 +27,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     Intent intent;
     int choice;
-    private TextView textView;
-    private GpsTool gpsTool;
+    MapsActivity maps ;
     SharedPreferences firsttime;
     private static final int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 291;
     int backCount=0;
@@ -38,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         requestPermissionsApp();
+        maps=new MapsActivity();
         firsttime = this.getSharedPreferences("firsttimecheck",MODE_PRIVATE);
         SharedPreferences.Editor editor = firsttime.edit();
         String checkString = firsttime.getString("status","false");
@@ -57,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
         }
         intent = new Intent(MainActivity.this,confirmationScreen.class);
         choice=0;
-        Intent serviceIntent = new Intent(MainActivity.this,SMSReader.class);
-        startService(serviceIntent);
+        //Intent serviceIntent = new Intent(MainActivity.this,SMSReader.class);
+        //startService(serviceIntent);
         ImageButton help = (ImageButton)findViewById(R.id.helpButton);
         help.setOnLongClickListener(new View.OnLongClickListener(){
             public boolean onLongClick(View v){
@@ -69,23 +69,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-
-        textView = (TextView) this.findViewById(R.id.loc);
-        if (gpsTool == null) {
-            gpsTool = new GpsTool(this) {
-                @Override
-                public void onGpsLocationChanged(Location location) {
-                    super.onGpsLocationChanged(location);
-                    refreshLocation(location);
-                }
-            };
-        }
-
-    }
-
-
-
-
+     }
     public void contact(View v)
     {
         backCount=0;
@@ -161,18 +145,18 @@ public class MainActivity extends AppCompatActivity {
         sb.append("Longitude:").append(longitude).append("\n");
         sb.append("Latitude:").append(latitude).append("\n");
         sb.append("Altitude:").append(altitude);
-        textView.setText(sb.toString());
+        Intent intent = new Intent(MainActivity.this,MapsActivity.class);
+        startActivity(intent);
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        gpsTool.stopGpsUpdate();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        gpsTool.startGpsUpdate();
     }
 }

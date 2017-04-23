@@ -28,52 +28,50 @@ public class SMSReader extends Service {
         // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
     }
-    public static class readSMS extends BroadcastReceiver{
+    public  class readSMS extends BroadcastReceiver{
         @Override
         public void onReceive(Context context, Intent intent) {
-            final SmsManager sms = SmsManager.getDefault();
             final Intent alarm = new Intent(myContext,alarmService.class);
             // Retrieves a map of extended data from the intent.
             final Bundle bundle = intent.getExtras();
-
-            try {
-
+            Toast.makeText(context, "Received Message", Toast.LENGTH_SHORT).show();
                 if (bundle != null) {
 
                     final Object[] pdusObj = (Object[]) bundle.get("pdus");
-
                     for (int i = 0; i < pdusObj.length; i++) {
 
-                        SmsMessage currentMessage = SmsMessage.createFromPdu((byte[]) pdusObj[i]);
-                        String phoneNumber = currentMessage.getDisplayOriginatingAddress();
-
-                        String senderNum = phoneNumber;
-                        String message = currentMessage.getDisplayMessageBody();
-
-                        Log.d("SmsReceiver", "senderNum: "+ senderNum + "; message: " + message);
+                        SmsMessage rcvdmsg =null;
+                        String message = null;
+                        for(int p=0;p<pdusObj.length;p++){
+                            rcvdmsg=SmsMessage.createFromPdu((byte[])pdusObj[p]);
+                        }
+                        byte[] data=null;
+                        data=rcvdmsg.getUserData();
+                        if(data!=null){
+                            for(int index=0;index<data.length;index++){
+                                message+=Character.toString((char)data[index]);
+                            }
+                        }
                         int count=0;
                         Handler handler = new Handler();
-                        if(message.equals("Help Me!!!!")){
-                            myContext.startService(alarm);
-                            handler.postDelayed(new Runnable() {
-                                public void run() {
-                                    myContext.stopService(alarm);
-
-                                }
-                            },5000);
+                        if(message.contains("Help Me!!!!")){
+                            //myContext.startService(alarm);
+                            String[] coordinates = message.split(">");
+                            String latitudepart=coordinates[1].split(",")[0];
+                            String longitudepart=coordinates[1].split(",")[1];
+                            Log.i("lat","lat"+latitudepart);
+                            Intent mapsIntent = new Intent(myContext,MapsActivity.class);
+                            mapsIntent.putExtra("latitude",Double.parseDouble(latitudepart));
+                            mapsIntent.putExtra("longitude",Double.parseDouble(longitudepart));
+                            startActivity(mapsIntent);
                         }
 
                         // Show alert
                         int duration = Toast.LENGTH_LONG;
                     } // end for loop
                 } // bundle is null
-
-            } catch (Exception e) {
-                Log.e("SmsReceiver", "Exception smsReceiver" +e);
-
             }
 
 
         }
     }
-}
