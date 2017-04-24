@@ -14,9 +14,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.telephony.SmsManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     Intent intent;
     int choice;
     MapsActivity maps ;
-    SharedPreferences firsttime;
+    SharedPreferences firsttime,settings;
     private static final int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 291;
     int backCount=0;
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -36,25 +40,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        requestPermissionsApp();
         maps=new MapsActivity();
         firsttime = this.getSharedPreferences("firsttimecheck",MODE_PRIVATE);
         SharedPreferences.Editor editor = firsttime.edit();
+        settings=getSharedPreferences("settings",MODE_PRIVATE);
         String checkString = firsttime.getString("status","false");
         if(!checkString.equals("true")){
             editor.putString("status","true");
             editor.apply();
-            new AlertDialog.Builder(this)
-                    .setIcon(android.R.drawable.alert_dark_frame)
-                    .setTitle("Instructions!")
-                    .setMessage("How To Use : - \nStep 1 : - Add Trusted Contacts from your Existing Android Contacts to whom Distress Messages are to be Sent! \nStep 2 : - In Case of an Emergency, Open The App and Long Press The HELP Button! \nPlease Also Do the Following to Ensure Proper Functioning of the Application! \n1)If you have a Dual SIM phonw, Please set any one of them as default for sending SMS from settings > SIM cards! \n2) Add this app as an exception in any Task Killer apps if you are using any! \n3) Setup a PIN Code in the Next Screen for Security ! ")
-                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Log.i("zz","OK");
-                        }
-                    }).show();
-        }
+            editor.commit();
+            settings.edit().putString("PIN","2020").commit();
+            settings.edit().putString("alarm","on");
+            Intent welcome = new Intent(MainActivity.this,Welcome_Activity.class);
+            startActivity(welcome);
+            finish();
+       }
+        requestPermissionsApp();
         intent = new Intent(MainActivity.this,confirmationScreen.class);
         choice=0;
         //Intent serviceIntent = new Intent(MainActivity.this,SMSReader.class);
@@ -70,13 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
         });
      }
-    public void contact(View v)
-    {
-        backCount=0;
-        Intent i=new Intent(this,ContactSelection.class);
-        startActivity(i);
 
-    }
     @Override
     public void onBackPressed() {
         Toast.makeText(this, "Press Back Button One More Time To Exit Application!!", Toast.LENGTH_SHORT).show();
@@ -85,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
         }
         backCount=(backCount+1)%2;
     }
-
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     void requestPermissionsApp(){
@@ -101,9 +95,12 @@ public class MainActivity extends AppCompatActivity {
             permissionsList.add(Manifest.permission.SEND_SMS);
             permissionsList.add(Manifest.permission.RECEIVE_SMS);
             permissionsList.add(Manifest.permission.READ_SMS);
+            permissionsList.add(Manifest.permission.ACCESS_FINE_LOCATION);
+            permissionsList.add(Manifest.permission.ACCESS_COARSE_LOCATION);
             permissionsNeeded.add("Send SMS");
             permissionsNeeded.add("Receive SMS");
             permissionsNeeded.add("Read SMS");
+            permissionsList.add("Get GPS");
         }
         if (permissionsList.size() > 0) {
             if (permissionsNeeded.size() > 0) {
@@ -126,9 +123,6 @@ public class MainActivity extends AppCompatActivity {
       //  requestPermissionsApp();
     }
 
-
-
-
     private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
         new AlertDialog.Builder(MainActivity.this)
                 .setMessage(message)
@@ -136,18 +130,6 @@ public class MainActivity extends AppCompatActivity {
                 .setNegativeButton("Cancel", null)
                 .create()
                 .show();
-    }
-    private void refreshLocation(Location location) {
-        Double longitude = location.getLongitude();
-        Double latitude = location.getLatitude();
-        Double altitude = location.getAltitude();
-        StringBuilder sb = new StringBuilder();
-        sb.append("Longitude:").append(longitude).append("\n");
-        sb.append("Latitude:").append(latitude).append("\n");
-        sb.append("Altitude:").append(altitude);
-        Intent intent = new Intent(MainActivity.this,MapsActivity.class);
-        startActivity(intent);
-
     }
 
     @Override
@@ -158,5 +140,33 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.mainmenu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.settings:
+                //your code here
+                Intent tempSettings= new Intent(this,Settings.class);
+                startActivity(tempSettings);
+                finish();
+                return true;
+            case R.id.contacts:
+                backCount=0;
+                Intent i=new Intent(this,ContactSelection.class);
+                startActivity(i);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

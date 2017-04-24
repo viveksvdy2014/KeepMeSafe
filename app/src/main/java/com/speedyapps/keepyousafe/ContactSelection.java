@@ -33,8 +33,6 @@ public class ContactSelection extends Activity {
     public static String file1 = "MyPREFERENCES";
     public static String file2 = "PREFERENCES";
     public static String file3 = "COUNT";
-
-
     private TextView textView1;
     SharedPreferences sharedpreferences, sp, shared, get, no, get1;
     SharedPreferences.Editor ed, editor, num;
@@ -48,8 +46,6 @@ public class ContactSelection extends Activity {
     String n1;
     String name;
     String number;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,17 +59,11 @@ public class ContactSelection extends Activity {
         editor = sharedpreferences.edit();
         ed = sp.edit();
         num = shared.edit();
-
-
     }
-
-
     public void pickContact(View v) {
         Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
         startActivityForResult(contactPickerIntent, RESULT_PICK_CONTACT);
     }
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // check whether the result is ok
@@ -223,5 +213,12 @@ public class ContactSelection extends Activity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent main=new Intent(ContactSelection.this,MainActivity.class);
+        startActivity(main);
+        finish();
+    }
 }
 

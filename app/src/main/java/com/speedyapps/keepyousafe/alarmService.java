@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.provider.MediaStore;
 import android.widget.MediaController;
+import android.widget.Toast;
 
 public class alarmService extends Service {
     MediaPlayer mediaPlayer;
@@ -21,7 +22,6 @@ public class alarmService extends Service {
 
     @Override
     public void onCreate() {
-
         super.onCreate();
         mediaPlayer = MediaPlayer.create(this,R.raw.danger);
         forceFullVolume();

@@ -42,8 +42,9 @@ public class confirmationScreen extends AppCompatActivity implements LocationLis
     EditText editText;
     Double latitude = null, longitude = null,newlat=null,newlong=null;
     Handler timehandler;
-    SharedPreferences sharedpreferences, sp, shared;
+    SharedPreferences sharedpreferences, sp, shared,settings;
     String n;
+    Intent alarmIntent;
     String n1;
     LocationProvider provider;
     int count, i;
@@ -56,70 +57,17 @@ public class confirmationScreen extends AppCompatActivity implements LocationLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirmation_screen);
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        boolean enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        if (!enabled) {
-            Toast.makeText(this, "Please Enable GPS to use KeepMeSafe", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(intent);
-        }
-        provider = locationManager.getProvider(LocationManager.GPS_PROVIDER);
-        Toast.makeText(this, "Provider"+provider, Toast.LENGTH_SHORT).show();
-        handler = new Handler();
-        handler2 = new Handler();
-        timehandler = new Handler();
-        //alarmIntent = new Intent(confirmationScreen.this, alarmService.class);
-        textView = (TextView) findViewById(R.id.countDown);
-        editText = (EditText) findViewById(R.id.editTextPIN);
-        sharedpreferences = getSharedPreferences(file1, Context.MODE_PRIVATE);
-        sp = getSharedPreferences(file2, Context.MODE_PRIVATE);
-        shared = getSharedPreferences(file3, Context.MODE_PRIVATE);
-        i = 10;
-        run = new Runnable() {
-            @Override
-            public void run() {
-                textView.setText("" + i);
-                if ((i) == 0) {
-                    Toast.makeText(confirmationScreen.this, "distress called", Toast.LENGTH_SHORT).show();
-                    distressCall();
-                    handler.removeCallbacks(this);
-                } else{
-                    i--;
-                    if(i<=0)
-                        i=0;
-                    handler.postDelayed(this, 1000);
-                }
-            }
-        };
-        handler.post(run);
-        run2 = new Runnable() {
-            @Override
-            public void run() {
-                if (editText.getText().toString().equals("2020")) {
-                    //stopService(alarmIntent);
-                    handler.removeCallbacks(run);
-                    handler2.removeCallbacks(this);
-                    timehandler.removeCallbacks(run3);
-                    Toast.makeText(confirmationScreen.this, "Distress Calls Cancelled!", Toast.LENGTH_SHORT).show();
-                    Intent main = new Intent(confirmationScreen.this, MainActivity.class);
-                    startActivity(main);
-                    finish();
-                } else
-                    handler2.postDelayed(this, 1000);
 
-
-            }
-        };
-        handler2.post(run2);
     }
 
     public void distressCall() {
-        // startService(alarmIntent);
+        if(settings.getString("alarm","on").equals("on")) {
+            startService(alarmIntent);
+        }
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         Location location = getLastKnownLocation();
-        Toast.makeText(this, "Initial Location var : "+location.getLatitude()+location.getLongitude(), Toast.LENGTH_SHORT).show();
         if(location!=null){
         latitude=location.getLatitude();
         longitude=location.getLongitude();
@@ -300,7 +248,76 @@ public class confirmationScreen extends AppCompatActivity implements LocationLis
         return bestLocation;
     }
 
-    public void requestLocationChange(){
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        func();
+    }
+
+    public void func(){
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        boolean enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        settings=getSharedPreferences("settings",MODE_PRIVATE);
+        if (!enabled) {
+            Toast.makeText(this, "Please Enable GPS to use KeepMeSafe", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+        }
+        else {
+            provider = locationManager.getProvider(LocationManager.GPS_PROVIDER);
+            Toast.makeText(this, "Provider" + provider, Toast.LENGTH_SHORT).show();
+            handler = new Handler();
+            handler2 = new Handler();
+            timehandler = new Handler();
+            alarmIntent = new Intent(confirmationScreen.this, alarmService.class);
+            textView = (TextView) findViewById(R.id.countDown);
+            editText = (EditText) findViewById(R.id.editTextPIN);
+            sharedpreferences = getSharedPreferences(file1, Context.MODE_PRIVATE);
+            sp = getSharedPreferences(file2, Context.MODE_PRIVATE);
+            shared = getSharedPreferences(file3, Context.MODE_PRIVATE);
+            i = Integer.parseInt(settings.getString("timer", "10"));
+            run = new Runnable() {
+                @Override
+                public void run() {
+                    textView.setText("" + i);
+                    if ((i) == 0) {
+                        distressCall();
+                        handler.removeCallbacks(this);
+                    } else {
+                        i--;
+                        if (i <= 0)
+                            i = 0;
+                        handler.postDelayed(this, 1000);
+                    }
+                }
+            };
+            handler.post(run);
+            run2 = new Runnable() {
+                @Override
+                public void run() {
+                    if (editText.getText().toString().equals(settings.getString("PIN", "2123789564237572345278356834"))) {
+                        stopService(alarmIntent);
+                        handler.removeCallbacks(run);
+                        handler2.removeCallbacks(this);
+                        timehandler.removeCallbacks(run3);
+                        Toast.makeText(confirmationScreen.this, "Distress Calls Cancelled!", Toast.LENGTH_SHORT).show();
+                        Intent main = new Intent(confirmationScreen.this, MainActivity.class);
+                        startActivity(main);
+                        finish();
+                    } else
+                        handler2.postDelayed(this, 1000);
+
+
+                }
+            };
+            handler2.post(run2);
+        }
+
 
     }
 
