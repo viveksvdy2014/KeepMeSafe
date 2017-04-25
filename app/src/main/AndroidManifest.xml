@@ -64,9 +64,17 @@
             android:label="@string/title_activity_maps" />
         <activity android:name=".Settings" />
         <activity android:name=".changePassword" />
-        <activity android:name=".Welcome_Activity">
+        <activity android:name=".Welcome_Activity" />
 
-        </activity>
+        <service
+            android:name=".PowerButtonReceiver"
+            android:enabled="true"
+            android:exported="true" />
+
+        <receiver
+            android:name=".power_receiver"
+            android:enabled="true"
+            android:exported="true"></receiver>
     </application>
 
 </manifest>

@@ -38,11 +38,20 @@ public class Settings extends AppCompatActivity {
         arrayList.add("SATELITE");
         arrayList.add("TERRAIN");
         arrayList.add("HYBRID");
+        sw=(Switch)findViewById(R.id.switch1);
+
         arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,arrayList);
         spinner.setAdapter(arrayAdapter);
         sp=getSharedPreferences("settings",MODE_PRIVATE);
-        sw=(Switch)findViewById(R.id.switch1);
+        if(sp.getString("alarm","on").equals("on")){
+            sw.setChecked(true);
+            sp.edit().putString("alarm","on").commit();
+        }
+        else
+            sw.setChecked(false);
+
         et = (EditText)findViewById(R.id.editText2);
+        et.setHint(sp.getString("timer","10").toString());
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){

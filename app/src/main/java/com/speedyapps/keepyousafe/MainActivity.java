@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         maps=new MapsActivity();
+        Intent power_service = new Intent(MainActivity.this,PowerButtonReceiver.class);
+        startService(power_service);
         firsttime = this.getSharedPreferences("firsttimecheck",MODE_PRIVATE);
         SharedPreferences.Editor editor = firsttime.edit();
         settings=getSharedPreferences("settings",MODE_PRIVATE);
@@ -63,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         ImageButton help = (ImageButton)findViewById(R.id.helpButton);
         help.setOnLongClickListener(new View.OnLongClickListener(){
             public boolean onLongClick(View v){
+                intent.putExtra("context","0");
                 backCount=0;
                 startActivity(intent);
                 finish();

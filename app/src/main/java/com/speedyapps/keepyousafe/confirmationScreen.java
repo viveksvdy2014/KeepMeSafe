@@ -134,19 +134,19 @@ public class confirmationScreen extends AppCompatActivity implements LocationLis
             public void onReceive(Context context, Intent intent) {
                 switch (getResultCode()) {
                     case Activity.RESULT_OK:
-                        Toast.makeText(context, "SMS sent successfully", Toast.LENGTH_SHORT).show();
+                     //   Toast.makeText(context, "SMS sent successfully", Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                        Toast.makeText(context, "Generic failure cause", Toast.LENGTH_SHORT).show();
+                     //   Toast.makeText(context, "Generic failure cause", Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_NO_SERVICE:
-                        Toast.makeText(context, "Service is currently unavailable", Toast.LENGTH_SHORT).show();
+                     //   Toast.makeText(context, "Service is currently unavailable", Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_NULL_PDU:
-                        Toast.makeText(context, "No pdu provided", Toast.LENGTH_SHORT).show();
+                      //  Toast.makeText(context, "No pdu provided", Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_RADIO_OFF:
-                        Toast.makeText(context, "Radio was explicitly turned off", Toast.LENGTH_SHORT).show();
+                      //  Toast.makeText(context, "Radio was explicitly turned off", Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
@@ -158,10 +158,10 @@ public class confirmationScreen extends AppCompatActivity implements LocationLis
             public void onReceive(Context context, Intent intent) {
                 switch (getResultCode()) {
                     case Activity.RESULT_OK:
-                        Toast.makeText(getBaseContext(), "SMS delivered", Toast.LENGTH_SHORT).show();
+                     //   Toast.makeText(getBaseContext(), "SMS delivered", Toast.LENGTH_SHORT).show();
                         break;
                     case Activity.RESULT_CANCELED:
-                        Toast.makeText(getBaseContext(), "SMS not delivered", Toast.LENGTH_SHORT).show();
+                     //   Toast.makeText(getBaseContext(), "SMS not delivered", Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
@@ -181,7 +181,7 @@ public class confirmationScreen extends AppCompatActivity implements LocationLis
 
     @Override
     public void onLocationChanged(Location location) {
-        Toast.makeText(this, "new Location : "+latitude+","+longitude, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(this, "new Location : "+latitude+","+longitude, Toast.LENGTH_SHORT).show();
         newlat=location.getLatitude();
         newlong=location.getLongitude();
     }
@@ -270,7 +270,7 @@ public class confirmationScreen extends AppCompatActivity implements LocationLis
         }
         else {
             provider = locationManager.getProvider(LocationManager.GPS_PROVIDER);
-            Toast.makeText(this, "Provider" + provider, Toast.LENGTH_SHORT).show();
+           // Toast.makeText(this, "Provider" + provider, Toast.LENGTH_SHORT).show();
             handler = new Handler();
             handler2 = new Handler();
             timehandler = new Handler();
@@ -307,8 +307,12 @@ public class confirmationScreen extends AppCompatActivity implements LocationLis
                         timehandler.removeCallbacks(run3);
                         Toast.makeText(confirmationScreen.this, "Distress Calls Cancelled!", Toast.LENGTH_SHORT).show();
                         Intent main = new Intent(confirmationScreen.this, MainActivity.class);
-                        startActivity(main);
-                        finish();
+                        if(getIntent().getStringExtra("context").equals("1"))
+                            finish();
+                        else {
+                            startActivity(main);
+                            finish();
+                        }
                     } else
                         handler2.postDelayed(this, 1000);
 
