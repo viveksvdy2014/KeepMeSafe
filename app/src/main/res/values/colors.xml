@@ -9,7 +9,7 @@
 
     <!-- Colors for Intro Screens -->
 
-    <color name="bg_screen1">#e91e63</color>
+    <color name="bg_screen1">#E1BEE7</color>
     <color name="bg_screen2">#2196F3</color>
     <color name="bg_screen3">#8BC34A</color>
     <color name="bg_screen4">#FF9800</color>
